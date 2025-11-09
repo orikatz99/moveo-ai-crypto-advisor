@@ -1,13 +1,23 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import mongoose from "mongoose";   
-
-dotenv.config();
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
-app.use(cors());
+
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"], 
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+app.use("/api", authRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI!)
