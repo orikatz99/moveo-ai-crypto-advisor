@@ -1,4 +1,3 @@
-console.log("JWT_SECRET loaded?", !!process.env.JWT_SECRET);
 
 import { Request, Response } from "express";
 import User from "../models/userModel";
