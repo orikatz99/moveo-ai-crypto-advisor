@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/authController";
+import { registerUser, loginUser, savePreferences } from "../controllers/authController";
 import { requireAuth } from "../middleware/requireAuth";
 
 const router = express.Router();
@@ -9,6 +9,9 @@ router.post("/signup", registerUser);
 
 // login
 router.post("/login", loginUser);
+
+// preferences 
+router.put("/preferences", requireAuth, savePreferences);
 
 // get current user
 router.get("/me", requireAuth, (req, res) => {

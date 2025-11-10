@@ -17,6 +17,8 @@ export default function Register() {
     try {
       const res = await api.post("/signup", { name, email, password });
       setMsg(res.data.message || "User registered successfully.");
+      window.location.href = "/onboarding";
+
       // Optional: reset fields after success
       // setName(""); setEmail(""); setPassword("");
     } catch (err: any) {
@@ -36,7 +38,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f3ec]">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "beige" }}>
       <div className="bg-white p-10 rounded-2xl shadow-lg w-96 text-center">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
           Create Your Account

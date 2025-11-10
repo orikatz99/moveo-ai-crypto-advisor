@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import User from "../models/userModel";
 import bcrypt from "bcryptjs";
@@ -112,3 +111,34 @@ export const loginUser = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error." });
   }
 };
+
+// save preferences
+export const savePreferences = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const prefs = req.body; 
+    if (!prefs || typeof prefs !== "object") {
+      return res.status(400).json({ error: "Invalid preferences payload" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { preferences: prefs },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ message: "Preferences saved", user: updatedUser });
+  } catch (err) {
+    console.error("savePreferences error:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+

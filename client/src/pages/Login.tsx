@@ -30,7 +30,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f3ec]">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "beige" }}>
       <div className="bg-white p-10 rounded-2xl shadow-lg w-96 text-center">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Login</h2>
 
