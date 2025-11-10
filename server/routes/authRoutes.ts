@@ -23,6 +23,17 @@ router.put("/preferences", requireAuth, savePreferences);
     createdAt: u.createdAt,
     preferences: u.preferences || {},
   });
+
+  // logout
+router.post("/logout", (_req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
+  res.json({ message: "Logged out" });
+});
+
 });
 
 

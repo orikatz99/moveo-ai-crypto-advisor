@@ -1,8 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Dashboard() {
   const [user, setUser] = useState<{ name?: string; preferences?: any } | null>(null);
+
+  const navigate = useNavigate();
+
+async function handleLogout() {
+  try {
+    await api.post("/logout");
+  } catch (err) {
+    console.error("Logout failed:", err);
+  } finally {
+    navigate("/login"); // back to login screen
+  }
+}
 
   // Fetch current user (includes preferences)
   useEffect(() => {
@@ -74,10 +88,22 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: "beige" }}>
-      <header className="max-w-5xl mx-auto px-4 py-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Daily Dashboard</h1>
-        <p className="text-gray-600">Hello, {user?.name || "Guest"} </p>
-      </header>
+      <header className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
+  <div>
+    <h1 className="text-2xl md:text-3xl font-bold">Daily Dashboard</h1>
+    <p className="text-gray-600">
+      Hello, {user?.name || "Guest"} 👋
+    </p>
+  </div>
+
+  <button
+    onClick={handleLogout}
+    className="px-3 py-2 rounded-md bg-gray-900 text-white text-sm hover:bg-black"
+  >
+    Logout
+  </button>
+</header>
+
 
       <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
         {/* --- Section 1: Market News --- */}
