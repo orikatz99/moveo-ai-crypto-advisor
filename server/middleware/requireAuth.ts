@@ -23,7 +23,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 
     const payload = jwt.verify(token, JWT_SECRET) as { sub: string };
 
-    const user = await User.findById(payload.sub).select("_id name email createdAt");
+    const user = await User.findById(payload.sub).select("_id name email createdAt preferences");
     if (!user) {
       return res.status(401).json({ error: "User not found." });
     }

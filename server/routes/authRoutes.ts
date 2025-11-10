@@ -14,10 +14,18 @@ router.post("/login", loginUser);
 router.put("/preferences", requireAuth, savePreferences);
 
 // get current user
-router.get("/me", requireAuth, (req, res) => {
+  router.get("/me", requireAuth, (req, res) => {
   const u = (req as any).user;
-  res.json({ id: u._id, name: u.name, email: u.email, createdAt: u.createdAt });
+  res.json({
+    id: u._id,
+    name: u.name,
+    email: u.email,
+    createdAt: u.createdAt,
+    preferences: u.preferences || {},
+  });
 });
+
+
 
 
 export default router;

@@ -5,7 +5,7 @@ import "./index.css";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
-
+import Dashboard from "./pages/Dashboard";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
