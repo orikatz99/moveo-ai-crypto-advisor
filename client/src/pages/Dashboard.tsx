@@ -92,7 +92,7 @@ async function handleLogout() {
   <div>
     <h1 className="text-2xl md:text-3xl font-bold">Daily Dashboard</h1>
     <p className="text-gray-600">
-      Hello, {user?.name || "Guest"} 👋
+      Hello, {user?.name || "Guest"} 
     </p>
   </div>
 
