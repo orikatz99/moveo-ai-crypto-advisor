@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
+import VoteButtons from "./VoteButtons"; // ✅ import voting component
 
 type Props = {
   assets: string[];
@@ -12,6 +13,12 @@ export default function AiInsight({ assets, investorType }: Props) {
   const [err, setErr] = useState<string | null>(null);
 
   const assetsQuery = useMemo(() => assets.join(","), [assets]);
+
+  // create a stable ID for daily AI insight (e.g. "insight:2025-11-11")
+  const insightId = useMemo(() => {
+    const date = new Date().toISOString().split("T")[0];
+    return `insight:${date}`;
+  }, []);
 
   useEffect(() => {
     const fetchInsight = async () => {
@@ -36,7 +43,11 @@ export default function AiInsight({ assets, investorType }: Props) {
 
   return (
     <section className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-2">AI Insight of the Day 🤖</h2>
+      {/* header + voting */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-lg font-semibold">AI Insight of the Day 🤖</h2>
+        <VoteButtons type="insight" itemId={insightId} />
+      </div>
 
       {!assets.length ? (
         <div className="text-gray-500 text-sm">

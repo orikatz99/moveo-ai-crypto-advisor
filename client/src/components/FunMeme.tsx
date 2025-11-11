@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
+import VoteButtons from "./VoteButtons";
 
 type Meme = {
   title: string;
   imageUrl: string;
-  postUrl: string;
-  source: string;
+  postUrl: string; // reddit permalink (good stable id)
+  source: string;  // subreddit name
 };
 
 export default function FunMeme({ assets }: { assets: string[] }) {
@@ -42,8 +43,7 @@ export default function FunMeme({ assets }: { assets: string[] }) {
   }, [assetsQuery]);
 
   // Fallback image in case the remote image fails to load
-  const FALLBACK_IMG =
-    "https://i.redd.it/6t5b0zqgkcl81.jpg"; // safe, static image
+  const FALLBACK_IMG = "https://i.redd.it/6t5b0zqgkcl81.jpg";
 
   if (loading) {
     // Lightweight skeleton to keep card height stable
@@ -63,9 +63,16 @@ export default function FunMeme({ assets }: { assets: string[] }) {
     return <div className="text-gray-500 text-sm">No meme right now.</div>;
   }
 
+  // Stable item id for voting (prefer postUrl)
+  const itemId = meme.postUrl || meme.imageUrl || meme.title;
+
   return (
     <div>
-      <p className="text-sm text-gray-700 mb-2">{meme.title}</p>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm text-gray-700 mb-2 flex-1">{meme.title}</p>
+        {/* voting for this meme */}
+        <VoteButtons type="meme" itemId={itemId} />
+      </div>
 
       {/* Wrap image with link to the original Reddit post */}
       <a

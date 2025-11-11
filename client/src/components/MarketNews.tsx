@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
+import VoteButtons from "./VoteButtons";
 
 type NewsItem = {
   id: number | string;
@@ -54,15 +55,22 @@ export default function MarketNews({ assets }: { assets: string[] }) {
         <ul className="divide-y divide-gray-100">
           {items.map((n) => (
             <li key={n.id} className="py-3">
-              <div className="block text-base font-semibold text-gray-900">
-                {n.title}
+              {/* headline + voting */}
+              <div className="flex items-center justify-between">
+                <div className="text-base font-semibold text-gray-900">
+                  {n.title}
+                </div>
+                {/* vote buttons */}
+                <VoteButtons type="news" itemId={String(n.id)} />
               </div>
 
+              {/* metadata (source + date) */}
               <div className="text-xs text-gray-500 mt-1">
                 {n.source ? `${n.source} • ` : ""}
                 {new Date(n.published_at).toLocaleString()}
               </div>
 
+              {/* tags */}
               {n.currencies?.length > 0 && (
                 <div className="mt-2 flex gap-2 flex-wrap">
                   {n.currencies.map((c) => (

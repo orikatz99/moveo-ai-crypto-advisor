@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes";
 import newsRoutes from "./routes/newsRoutes";
 import aiRoutes from "./routes/aiRoutes";
 import memeRoutes from "./routes/memeRoutes";
+import voteRoutes from "./routes/voteRoutes";
+import { requireAuth } from "./middleware/requireAuth";
 
 
 const app = express();
@@ -41,3 +43,8 @@ app.use("/api", newsRoutes);
 app.use("/api", aiRoutes);
 
 app.use("/api", memeRoutes);
+
+app.use("/api", requireAuth, voteRoutes);
+
+
+
