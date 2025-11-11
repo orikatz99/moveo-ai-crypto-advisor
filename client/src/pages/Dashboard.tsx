@@ -3,6 +3,7 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import CoinPrices from "../components/CoinPrices";
 import MarketNews from "../components/MarketNews";
+import AiInsight from "../components/AiInsight";
 
 
 export default function Dashboard() {
@@ -52,31 +53,32 @@ export default function Dashboard() {
         </button>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
-        {/* --- Section 1: Market News --- */}
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Market News</h2>
-          <MarketNews assets={selectedAssets}/>
-        </section>
+    <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
+    {/* --- Section 1: Market News --- */}
+    <section className="bg-white rounded-lg shadow p-4">
+    <h2 className="text-lg font-semibold mb-2">Market News</h2>
+    <MarketNews assets={selectedAssets} />
+    </section>
 
-        {/* --- Section 2: Coin Prices --- */}
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Coin Prices</h2>
-          <CoinPrices assets={selectedAssets} />
-        </section>
+    {/* --- Section 2: Coin Prices --- */}
+    <section className="bg-white rounded-lg shadow p-4">
+    <h2 className="text-lg font-semibold mb-2">Coin Prices</h2>
+    <CoinPrices assets={selectedAssets} />
+    </section>
 
-        {/* --- Section 3: AI Insight --- */}
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">AI Insight of the Day</h2>
-          <div className="text-gray-500 text-sm">Coming soon…</div>
-        </section>
+    {/* --- Section 3: AI Insight of the Day --- */}
+    <AiInsight
+        assets={selectedAssets}
+        investorType={user?.preferences?.investorType}
+    />
 
-        {/* --- Section 4: Fun Meme --- */}
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
-          <div className="text-gray-500 text-sm">Coming soon…</div>
-        </section>
-      </main>
+    {/* --- Section 4: Fun Meme --- */}
+    <section className="bg-white rounded-lg shadow p-4">
+        <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
+        <div className="text-gray-500 text-sm">Coming soon…</div>
+    </section>
+    </main>
+
     </div>
   );
 }
