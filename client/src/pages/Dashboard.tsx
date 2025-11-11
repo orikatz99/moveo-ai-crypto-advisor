@@ -1,4 +1,3 @@
-// client/src/pages/Dashboard.tsx
 import { useEffect, useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
@@ -7,21 +6,37 @@ import MarketNews from "../components/MarketNews";
 import AiInsight from "../components/AiInsight";
 import FunMeme from "../components/FunMeme";
 
+type UserShape = {
+  _id?: string;
+  id?: string;
+  name?: string;
+  preferences?: {
+    assets?: string[];
+    contentTypes?: string[];
+    investorType?: string;
+  };
+};
+
 export default function Dashboard() {
-  const [user, setUser] = useState<{ name?: string; preferences?: any } | null>(null);
+  const [user, setUser] = useState<UserShape | null>(null);
   const navigate = useNavigate();
 
+  // Logout: server + clear local vote cache, then navigate
   async function handleLogout() {
     try {
       await api.post("/logout");
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {
+      // Clear only our vote cache so next user doesn't inherit highlights
+      Object.keys(localStorage).forEach((k) => {
+        if (k.startsWith("vote:")) localStorage.removeItem(k);
+      });
       navigate("/login");
     }
   }
 
-  // fetch current user (includes preferences)
+  // Fetch current user (brings preferences too)
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -34,16 +49,17 @@ export default function Dashboard() {
     fetchUser();
   }, []);
 
-  // preferences
+  // Preferences & user id
   const prefs = user?.preferences || {};
   const selectedAssets: string[] = Array.isArray(prefs.assets) ? prefs.assets : [];
   const contentTypes: string[] = Array.isArray(prefs.contentTypes) ? prefs.contentTypes : [];
   const investorType: string | undefined = prefs.investorType;
+  const userId = user?._id || user?.id || undefined;
 
-  // toggles per content type (names match your onboarding options)
+  // Toggles per content type (names match onboarding options)
   const wantsNews = contentTypes.includes("Market News");
   const wantsCharts = contentTypes.includes("Charts");
-  const wantsAi = contentTypes.includes("Social"); 
+  const wantsAi = contentTypes.includes("Social");
   const wantsFun = contentTypes.includes("Fun");
 
   return (
@@ -67,7 +83,7 @@ export default function Dashboard() {
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-2">Coin Prices 🪙</h2>
           {wantsCharts ? (
-            <CoinPrices assets={selectedAssets} />
+            <CoinPrices assets={selectedAssets} userId={userId} />
           ) : (
             <p className="text-gray-500 text-sm">
               You turned off <b>Charts</b> in preferences.
@@ -77,10 +93,10 @@ export default function Dashboard() {
 
         {/* 2) AI Insight of the Day */}
         {wantsAi ? (
-          // AiInsight already renders its own card, so render it directly
-          <AiInsight assets={selectedAssets} investorType={investorType} />
+          // AiInsight renders its own card
+          <AiInsight assets={selectedAssets} investorType={investorType} userId={userId} />
         ) : (
-          // If AI is off, show a replacement card in the grid
+          // Replacement card when AI/Social is disabled
           <section className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold mb-2">AI Insight of the Day 🤖</h2>
             <p className="text-gray-500 text-sm">
@@ -93,7 +109,7 @@ export default function Dashboard() {
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-2">Market News 📰</h2>
           {wantsNews ? (
-            <MarketNews assets={selectedAssets} />
+            <MarketNews assets={selectedAssets} userId={userId} />
           ) : (
             <p className="text-gray-500 text-sm">
               You turned off <b>Market News</b> in preferences.
@@ -105,7 +121,7 @@ export default function Dashboard() {
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme 😄</h2>
           {wantsFun ? (
-            <FunMeme assets={selectedAssets} />
+            <FunMeme assets={selectedAssets} userId={userId} />
           ) : (
             <p className="text-gray-500 text-sm">
               You turned off <b>Fun</b> content in preferences.
