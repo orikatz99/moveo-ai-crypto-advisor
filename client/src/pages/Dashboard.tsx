@@ -63,21 +63,9 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
-        {/* 1) Market News */}
+        {/* 1) Coin Prices (Charts) */}
         <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Market News</h2>
-          {wantsNews ? (
-            <MarketNews assets={selectedAssets} />
-          ) : (
-            <p className="text-gray-500 text-sm">
-              You turned off <b>Market News</b> in preferences.
-            </p>
-          )}
-        </section>
-
-        {/* 2) Coin Prices (Charts) */}
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Coin Prices</h2>
+          <h2 className="text-lg font-semibold mb-2">Coin Prices 🪙</h2>
           {wantsCharts ? (
             <CoinPrices assets={selectedAssets} />
           ) : (
@@ -87,23 +75,35 @@ export default function Dashboard() {
           )}
         </section>
 
-        {/* 3) AI Insight of the Day */}
+        {/* 2) AI Insight of the Day */}
         {wantsAi ? (
           // AiInsight already renders its own card, so render it directly
           <AiInsight assets={selectedAssets} investorType={investorType} />
         ) : (
           // If AI is off, show a replacement card in the grid
           <section className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-lg font-semibold mb-2">AI Insight of the Day</h2>
+            <h2 className="text-lg font-semibold mb-2">AI Insight of the Day 🤖</h2>
             <p className="text-gray-500 text-sm">
               You turned off <b>Social</b> content in preferences.
             </p>
           </section>
         )}
 
+        {/* 3) Market News */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Market News 📰</h2>
+          {wantsNews ? (
+            <MarketNews assets={selectedAssets} />
+          ) : (
+            <p className="text-gray-500 text-sm">
+              You turned off <b>Market News</b> in preferences.
+            </p>
+          )}
+        </section>
+
         {/* 4) Fun Meme */}
         <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
+          <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme 😄</h2>
           {wantsFun ? (
             <FunMeme assets={selectedAssets} />
           ) : (

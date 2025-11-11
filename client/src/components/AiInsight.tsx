@@ -36,7 +36,7 @@ export default function AiInsight({ assets, investorType }: Props) {
 
   return (
     <section className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-2">AI Insight of the Day</h2>
+      <h2 className="text-lg font-semibold mb-2">AI Insight of the Day 🤖</h2>
 
       {!assets.length ? (
         <div className="text-gray-500 text-sm">

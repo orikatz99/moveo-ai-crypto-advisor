@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 export default function Onboarding() {
@@ -8,20 +9,23 @@ export default function Onboarding() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
 
-  // toggle for assets
+  const navigate = useNavigate();
+
+  // Toggle a coin in the selected assets list
   const toggleAsset = (coin: string) => {
     setAssets((prev) =>
       prev.includes(coin) ? prev.filter((a) => a !== coin) : [...prev, coin]
     );
   };
 
-  // toggle for content types
+  // Toggle a content type in the selected list
   const toggleContent = (type: string) => {
     setContentTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
+  // Simple validity check for the form
   const isValid =
     assets.length > 0 && investorType !== "" && contentTypes.length > 0;
 
@@ -29,8 +33,14 @@ export default function Onboarding() {
     try {
       setMsg("");
       setLoading(true);
+
       await api.put("/preferences", { assets, investorType, contentTypes });
+
+      // Optional toast text (won't be seen long because we navigate)
       setMsg("✅ Preferences saved");
+
+      // ✅ Redirect to the dashboard after successful save
+      navigate("/dashboard");
     } catch (err: any) {
       const text = err?.response?.data?.error || "Failed to save preferences";
       setMsg("❌ " + text);
@@ -77,7 +87,9 @@ export default function Onboarding() {
 
         {/* ==== Question 2 ==== */}
         <div className="mb-4">
-          <h2 className="text-lg md:text-xl font-bold mb-3"> What type of investor are you?</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-3">
+            What type of investor are you?
+          </h2>
 
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             {["HODLer", "Day Trader", "NFT Collector"].map((type) => (
