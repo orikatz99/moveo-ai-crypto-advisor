@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/vote", async (req, res) => {
   try {
-    const u = (req as any).user; // מגיע מ-auth middleware
+    const u = (req as any).user; 
     if (!u?._id) return res.status(401).json({ error: "Unauthorized" });
 
     const { type, itemId, value } = req.body || {};
