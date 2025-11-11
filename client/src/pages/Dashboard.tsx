@@ -1,3 +1,4 @@
+// client/src/pages/Dashboard.tsx
 import { useEffect, useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +17,11 @@ export default function Dashboard() {
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {
-      navigate("/login"); // back to login screen
+      navigate("/login");
     }
   }
 
-  // Fetch current user (includes preferences)
+  // fetch current user (includes preferences)
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,9 +34,17 @@ export default function Dashboard() {
     fetchUser();
   }, []);
 
-  const selectedAssets: string[] = Array.isArray(user?.preferences?.assets)
-    ? user!.preferences.assets
-    : [];
+  // preferences
+  const prefs = user?.preferences || {};
+  const selectedAssets: string[] = Array.isArray(prefs.assets) ? prefs.assets : [];
+  const contentTypes: string[] = Array.isArray(prefs.contentTypes) ? prefs.contentTypes : [];
+  const investorType: string | undefined = prefs.investorType;
+
+  // toggles per content type (names match your onboarding options)
+  const wantsNews = contentTypes.includes("Market News");
+  const wantsCharts = contentTypes.includes("Charts");
+  const wantsAi = contentTypes.includes("Social"); 
+  const wantsFun = contentTypes.includes("Fun");
 
   return (
     <div className="min-h-screen" style={{ background: "beige" }}>
@@ -53,32 +62,57 @@ export default function Dashboard() {
         </button>
       </header>
 
-    <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
-    {/* --- Section 1: Market News --- */}
-    <section className="bg-white rounded-lg shadow p-4">
-    <h2 className="text-lg font-semibold mb-2">Market News</h2>
-    <MarketNews assets={selectedAssets} />
-    </section>
+      <main className="max-w-5xl mx-auto px-4 pb-10 grid gap-6 md:grid-cols-2">
+        {/* 1) Market News */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Market News</h2>
+          {wantsNews ? (
+            <MarketNews assets={selectedAssets} />
+          ) : (
+            <p className="text-gray-500 text-sm">
+              You turned off <b>Market News</b> in preferences.
+            </p>
+          )}
+        </section>
 
-    {/* --- Section 2: Coin Prices --- */}
-    <section className="bg-white rounded-lg shadow p-4">
-    <h2 className="text-lg font-semibold mb-2">Coin Prices</h2>
-    <CoinPrices assets={selectedAssets} />
-    </section>
+        {/* 2) Coin Prices (Charts) */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Coin Prices</h2>
+          {wantsCharts ? (
+            <CoinPrices assets={selectedAssets} />
+          ) : (
+            <p className="text-gray-500 text-sm">
+              You turned off <b>Charts</b> in preferences.
+            </p>
+          )}
+        </section>
 
-    {/* --- Section 3: AI Insight of the Day --- */}
-    <AiInsight
-        assets={selectedAssets}
-        investorType={user?.preferences?.investorType}
-    />
+        {/* 3) AI Insight of the Day */}
+        {wantsAi ? (
+          // AiInsight already renders its own card, so render it directly
+          <AiInsight assets={selectedAssets} investorType={investorType} />
+        ) : (
+          // If AI is off, show a replacement card in the grid
+          <section className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold mb-2">AI Insight of the Day</h2>
+            <p className="text-gray-500 text-sm">
+              You turned off <b>Social</b> content in preferences.
+            </p>
+          </section>
+        )}
 
-    {/* --- Section 4: Fun Meme --- */}
-    <section className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
-        <FunMeme assets={selectedAssets} />
-    </section>
-    </main>
-
+        {/* 4) Fun Meme */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
+          {wantsFun ? (
+            <FunMeme assets={selectedAssets} />
+          ) : (
+            <p className="text-gray-500 text-sm">
+              You turned off <b>Fun</b> content in preferences.
+            </p>
+          )}
+        </section>
+      </main>
     </div>
   );
 }
