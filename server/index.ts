@@ -5,8 +5,10 @@ import cors from "cors";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
+import newsRoutes from "./routes/newsRoutes";
 
 const app = express();
+const apiKey = process.env.CRYPTOPANIC_API_KEY;
 
 app.use(cookieParser());
 app.use(
@@ -30,3 +32,5 @@ app.get("/api/health", (_req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+
+app.use("/api", newsRoutes);
