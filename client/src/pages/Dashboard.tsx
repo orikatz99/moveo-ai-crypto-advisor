@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CoinPrices from "../components/CoinPrices";
 import MarketNews from "../components/MarketNews";
 import AiInsight from "../components/AiInsight";
-
+import FunMeme from "../components/FunMeme";
 
 export default function Dashboard() {
   const [user, setUser] = useState<{ name?: string; preferences?: any } | null>(null);
@@ -75,7 +75,7 @@ export default function Dashboard() {
     {/* --- Section 4: Fun Meme --- */}
     <section className="bg-white rounded-lg shadow p-4">
         <h2 className="text-lg font-semibold mb-2">Fun Crypto Meme</h2>
-        <div className="text-gray-500 text-sm">Coming soon…</div>
+        <FunMeme assets={selectedAssets} />
     </section>
     </main>
 

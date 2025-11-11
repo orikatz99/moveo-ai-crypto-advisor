@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
 import newsRoutes from "./routes/newsRoutes";
 import aiRoutes from "./routes/aiRoutes";
+import memeRoutes from "./routes/memeRoutes";
+
 
 const app = express();
 const apiKey = process.env.CRYPTOPANIC_API_KEY;
@@ -37,3 +39,5 @@ app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 app.use("/api", newsRoutes);
 
 app.use("/api", aiRoutes);
+
+app.use("/api", memeRoutes);
