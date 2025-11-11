@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import VoteButtons from "./VoteButtons";
 
-type Props = { assets: string[] };
+type Props = {
+  assets: string[];
+  userId?: string; // used to scope local vote state per user
+};
 
 // map user symbols -> CoinGecko ids
 const COINGECKO_IDS: Record<string, string> = {
@@ -15,7 +18,7 @@ const COINGECKO_IDS: Record<string, string> = {
 const fmtUSD = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-export default function CoinPrices({ assets }: Props) {
+export default function CoinPrices({ assets, userId }: Props) {
   // keep both symbol and id so we can show symbol and fetch by id
   const coins = useMemo(
     () =>
@@ -75,7 +78,7 @@ export default function CoinPrices({ assets }: Props) {
           </div>
 
           {/* voting per coin: type "price", itemId is the symbol (e.g., BTC) */}
-          <VoteButtons type="price" itemId={sym} />
+          <VoteButtons type="price" itemId={sym} userId={userId} />
         </li>
       ))}
     </ul>

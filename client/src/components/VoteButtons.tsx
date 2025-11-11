@@ -1,82 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "../api";
 
-type VoteType = "news" | "price" | "insight" | "meme";
-
 type Props = {
-  type: VoteType;
+  type: "news" | "price" | "insight" | "meme";
   itemId: string;
-  className?: string;
-  size?: "sm" | "md";
+  userId?: string;               
 };
 
-export default function VoteButtons({ type, itemId, className = "", size = "sm" }: Props) {
-  const storageKey = `vote:${type}:${itemId}`;
-  const [myVote, setMyVote] = useState<-1 | 0 | 1>(0);
-  const [busy, setBusy] = useState(false);
+export default function VoteButtons({ type, itemId, userId }: Props) {
+  const [myVote, setMyVote] = useState<0 | 1 | -1>(0);
 
-  // Restore saved vote (so highlight survives re-mount/refresh)
+  // per-user cache key in localStorage
+  const cacheKey = useMemo(
+    () => `vote:${userId || "anon"}:${type}:${itemId}`,
+    [userId, type, itemId]
+  );
+
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw === "1" || raw === "-1") setMyVote(Number(raw) as 1 | -1);
-    } catch {}
-  }, [storageKey]);
+    const raw = localStorage.getItem(cacheKey);
+    setMyVote(raw === "1" ? 1 : raw === "-1" ? -1 : 0);
+  }, [cacheKey]);
 
   const send = async (value: 1 | -1) => {
-    if (busy) return;
-    // If clicking the same choice again, do nothing (keep it selected)
-    if (myVote === value) return;
-
-    // Optimistic: set + persist immediately
     setMyVote(value);
-    try { localStorage.setItem(storageKey, String(value)); } catch {}
-
+    localStorage.setItem(cacheKey, String(value));
     try {
-      setBusy(true);
-      await api.post("/votes", { type, itemId, value });
+      await api.post("/vote", { type, itemId, value });
     } catch {
-      // We do NOT roll back UI — it stays selected as ביקשת.
-      // אפשר להוסיף הודעת שגיאה קטנה בעתיד אם תרצי.
-    } finally {
-      setBusy(false);
     }
   };
 
-  const base =
-    "inline-flex items-center rounded border px-2 py-1 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-60";
-  const upSelected =
-    "bg-green-100 border-green-300 text-green-700";
-  const upIdle =
-    "bg-white border-gray-200 text-gray-700 hover:bg-gray-50";
-  const downSelected =
-    "bg-red-100 border-red-300 text-red-700";
-  const downIdle =
-    "bg-white border-gray-200 text-gray-700 hover:bg-gray-50";
-
-  const gap = size === "md" ? "gap-2" : "gap-1";
-
   return (
-    <span className={`flex ${gap} ${className}`}>
+    <span className="inline-flex items-center gap-2">
       <button
-        type="button"
-        aria-label="Upvote"
-        aria-pressed={myVote === 1}
-        disabled={busy}
+        className={`px-2 py-1 rounded border ${
+          myVote === 1 ? "bg-green-100 border-green-300" : "border-gray-300"
+        }`}
         onClick={() => send(1)}
-        className={`${base} ${myVote === 1 ? upSelected : upIdle}`}
-        title="Upvote"
+        aria-pressed={myVote === 1}
       >
         👍
       </button>
       <button
-        type="button"
-        aria-label="Downvote"
-        aria-pressed={myVote === -1}
-        disabled={busy}
+        className={`px-2 py-1 rounded border ${
+          myVote === -1 ? "bg-red-100 border-red-300" : "border-gray-300"
+        }`}
         onClick={() => send(-1)}
-        className={`${base} ${myVote === -1 ? downSelected : downIdle}`}
-        title="Downvote"
+        aria-pressed={myVote === -1}
       >
         👎
       </button>

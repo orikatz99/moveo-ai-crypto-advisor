@@ -5,16 +5,15 @@ import VoteButtons from "./VoteButtons";
 type Meme = {
   title: string;
   imageUrl: string;
-  postUrl: string; // reddit permalink (good stable id)
-  source: string;  // subreddit name
+  postUrl: string; 
+  source: string;  
 };
 
-export default function FunMeme({ assets }: { assets: string[] }) {
+export default function FunMeme({ assets, userId }: { assets: string[]; userId?: string }) {
   const [meme, setMeme] = useState<Meme | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // Build query string like "BTC,ETH"
   const assetsQuery = useMemo(() => assets.join(","), [assets]);
 
   useEffect(() => {
@@ -70,8 +69,8 @@ export default function FunMeme({ assets }: { assets: string[] }) {
     <div>
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm text-gray-700 mb-2 flex-1">{meme.title}</p>
-        {/* voting for this meme */}
-        <VoteButtons type="meme" itemId={itemId} />
+        {/* Voting for this meme (userId is optional but used to key local state per user) */}
+        <VoteButtons type="meme" itemId={itemId} userId={userId} />
       </div>
 
       {/* Wrap image with link to the original Reddit post */}

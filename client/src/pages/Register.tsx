@@ -66,7 +66,6 @@ export default function Register() {
           {loading ? "Registering…" : "Register"}
         </button>
 
-        {/* 👇 הקישור להתחברות */}
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:underline font-medium">

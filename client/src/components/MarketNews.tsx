@@ -10,7 +10,7 @@ type NewsItem = {
   currencies: string[];
 };
 
-export default function MarketNews({ assets }: { assets: string[] }) {
+export default function MarketNews({ assets, userId }: { assets: string[]; userId?: string }) {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export default function MarketNews({ assets }: { assets: string[] }) {
                   {n.title}
                 </div>
                 {/* vote buttons */}
-                <VoteButtons type="news" itemId={String(n.id)} />
+                  <VoteButtons type="news" itemId={String(n.id)} userId={userId} />
               </div>
 
               {/* metadata (source + date) */}
