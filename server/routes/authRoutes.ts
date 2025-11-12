@@ -10,11 +10,11 @@ router.post("/signup", registerUser);
 // login
 router.post("/login", loginUser);
 
-// preferences 
+// save preferences (requires auth)
 router.put("/preferences", requireAuth, savePreferences);
 
-// get current user
-  router.get("/me", requireAuth, (req, res) => {
+// get current user (requires auth)
+router.get("/me", requireAuth, (req, res) => {
   const u = (req as any).user;
   res.json({
     id: u._id,
@@ -23,20 +23,17 @@ router.put("/preferences", requireAuth, savePreferences);
     createdAt: u.createdAt,
     preferences: u.preferences || {},
   });
+});
 
-  // logout
+// logout (clear cookie) – חשוב sameSite:none + secure:true
 router.post("/logout", (_req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    secure: true,
+    path: "/",
   });
   res.json({ message: "Logged out" });
 });
-
-});
-
-
-
 
 export default router;
