@@ -15,7 +15,7 @@ export default function Login() {
     try {
       setMsg("");
       setLoading(true);
-      await api.post("/login", { email, password });
+      await api.post("/api/login", { email, password });
       nav("/dashboard"); 
     } catch (err: any) {
       setMsg(err?.response?.data?.error || "Login failed");

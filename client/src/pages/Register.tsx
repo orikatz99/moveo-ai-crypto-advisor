@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../api";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const nav = useNavigate();
@@ -16,8 +16,9 @@ export default function Register() {
     try {
       setMsg("");
       setLoading(true);
-      await api.post("/signup", { name, email, password });
-      nav("/onboarding"); 
+      // 👇 חשוב: עם prefix /api
+      await api.post("/api/signup", { name, email, password });
+      nav("/onboarding");
     } catch (err: any) {
       setMsg(err?.response?.data?.error || "Register failed");
     } finally {

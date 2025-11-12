@@ -28,7 +28,7 @@ export default function MarketNews({ assets, userId }: { assets: string[]; userI
       try {
         setErr(null);
         setLoading(true);
-        const res = await api.get(`/news`, { params: { assets: assetsQuery } });
+        const res = await api.get(`/api/news`, { params: { assets: assetsQuery } });
         setItems(res.data?.results || []);
       } catch (e: any) {
         setErr(e?.response?.data?.error || "Failed to load news");

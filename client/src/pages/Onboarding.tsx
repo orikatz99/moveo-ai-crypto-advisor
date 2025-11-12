@@ -34,7 +34,7 @@ export default function Onboarding() {
       setMsg("");
       setLoading(true);
 
-      await api.put("/preferences", { assets, investorType, contentTypes });
+      await api.put("api/preferences", { assets, investorType, contentTypes });
 
       // Optional toast text (won't be seen long because we navigate)
       setMsg("✅ Preferences saved");

@@ -23,7 +23,7 @@ export default function FunMeme({ assets, userId }: { assets: string[]; userId?:
       try {
         setErr(null);
         setLoading(true);
-        const res = await api.get("/meme", { params: { assets: assetsQuery } });
+        const res = await api.get("/api/meme", { params: { assets: assetsQuery } });
         if (!alive) return;
         setMeme(res.data);
       } catch {

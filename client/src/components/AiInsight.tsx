@@ -34,7 +34,7 @@ export default function AiInsight({ assets, investorType = "HODLer", userId }: P
           assets: assetsQuery ? assetsQuery.split(",") : [],
           investorType,
         };
-        const res = await api.post("/ai-insight", body);
+        const res = await api.post("api/ai-insight", body);
         if (!alive) return;
         setInsight(res.data?.insight || "");
       } catch (e: any) {

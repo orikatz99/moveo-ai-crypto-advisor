@@ -25,7 +25,7 @@ export default function VoteButtons({ type, itemId, userId }: Props) {
     setMyVote(value);
     localStorage.setItem(cacheKey, String(value));
     try {
-      await api.post("/vote", { type, itemId, value });
+      await api.post("/api/vote", { type, itemId, value });
     } catch {
     }
   };

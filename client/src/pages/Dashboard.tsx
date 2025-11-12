@@ -19,12 +19,13 @@ type UserShape = {
 
 export default function Dashboard() {
   const [user, setUser] = useState<UserShape | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // Logout: server + clear local vote cache, then navigate
   async function handleLogout() {
     try {
-      await api.post("/logout");
+      await api.post("/api/logout");
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {
@@ -32,22 +33,36 @@ export default function Dashboard() {
       Object.keys(localStorage).forEach((k) => {
         if (k.startsWith("vote:")) localStorage.removeItem(k);
       });
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }
 
   // Fetch current user (brings preferences too)
   useEffect(() => {
-    const fetchUser = async () => {
+    (async () => {
       try {
-        const res = await api.get("/me");
+        const res = await api.get("/api/me");
         setUser(res.data);
-      } catch (err) {
+      } catch (err: any) {
+        const status = err?.response?.status;
+        if (status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
         console.error("Failed to fetch user:", err);
+      } finally {
+        setLoading(false);
       }
-    };
-    fetchUser();
-  }, []);
+    })();
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "beige" }}>
+        <div>Loading…</div>
+      </div>
+    );
+  }
 
   // Preferences & user id
   const prefs = user?.preferences || {};
@@ -93,10 +108,8 @@ export default function Dashboard() {
 
         {/* 2) AI Insight of the Day */}
         {wantsAi ? (
-          // AiInsight renders its own card
           <AiInsight assets={selectedAssets} investorType={investorType} userId={userId} />
         ) : (
-          // Replacement card when AI/Social is disabled
           <section className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold mb-2">AI Insight of the Day 🤖</h2>
             <p className="text-gray-500 text-sm">
