@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../api";
-import { Link, useNavigate } from "react-router-dom"; // ⬅️ הוספתי Link
+import { Link, useNavigate } from "react-router-dom"; 
 
 export default function Register() {
   const nav = useNavigate();
@@ -17,8 +17,7 @@ export default function Register() {
       setMsg("");
       setLoading(true);
       await api.post("/signup", { name, email, password });
-      // אחרי הרשמה אפשר ישר לנווט לאונבורדינג/דשבורד
-      nav("/onboarding"); // או "/dashboard" לפי הזרימה שלך
+      nav("/onboarding"); 
     } catch (err: any) {
       setMsg(err?.response?.data?.error || "Register failed");
     } finally {

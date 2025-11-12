@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../api";
-import { Link, useNavigate } from "react-router-dom"; // ⬅️ הוספתי Link
+import { Link, useNavigate } from "react-router-dom"; 
 
 export default function Login() {
   const nav = useNavigate();
@@ -16,7 +16,7 @@ export default function Login() {
       setMsg("");
       setLoading(true);
       await api.post("/login", { email, password });
-      nav("/dashboard"); // או /onboarding אם כך החלטת
+      nav("/dashboard"); 
     } catch (err: any) {
       setMsg(err?.response?.data?.error || "Login failed");
     } finally {
